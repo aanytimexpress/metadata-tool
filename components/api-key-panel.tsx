@@ -1,35 +1,24 @@
 "use client"
 
-import type { ApiKeyInfo, AIProvider, AIModel } from "@/types/ai-provider"
 import { useState } from "react"
-
-const MODELS: AIModel[] = [
-  // MISTRAL
-  { id: "mistral-small", name: "Mistral Small", speed: "Fastest", provider: "mistral" },
-  { id: "mistral-medium", name: "Mistral Medium", speed: "Fast", provider: "mistral" },
-  { id: "mistral-large", name: "Mistral Large", speed: "Standard", provider: "mistral" },
-]
+import type { ApiKeyInfo } from "@/types/ai-provider"
 
 export function ApiKeyPanel({
   apiKeys,
   onApiKeysChange,
-  selectedProvider,
-  onProviderChange,
 }: {
   apiKeys: ApiKeyInfo[]
-  onApiKeysChange: (k: ApiKeyInfo[]) => void
-  selectedProvider: AIProvider
-  onProviderChange: (p: AIProvider) => void
+  onApiKeysChange: (keys: ApiKeyInfo[]) => void
 }) {
   const [key, setKey] = useState("")
 
   const addKey = () => {
-    if (!key) return
+    if (!key.trim()) return
     onApiKeysChange([
       ...apiKeys,
       {
         key,
-        name: "Mistral Key",
+        name: "Mistral API Key",
         provider: "mistral",
         isActive: true,
         usageCount: 0,
@@ -41,9 +30,7 @@ export function ApiKeyPanel({
 
   return (
     <div>
-      <button onClick={() => onProviderChange("mistral")}>
-        Mistral AI
-      </button>
+      <h3>Mistral API Key</h3>
 
       <input
         value={key}
@@ -55,7 +42,7 @@ export function ApiKeyPanel({
 
       <ul>
         {apiKeys.map((k, i) => (
-          <li key={i}>{k.key.slice(0, 6)}...</li>
+          <li key={i}>{k.key.slice(0, 8)}...</li>
         ))}
       </ul>
     </div>

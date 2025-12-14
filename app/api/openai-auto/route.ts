@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server"
-import { generateAutoAI } from "@/lib/autoAIClient"
+import { generateWithAutoAI } from "@/lib/autoAIClient"
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
 
-    const result = await generateAutoAI(body)
+    const result = await generateWithAutoAI(body)
 
     return NextResponse.json({ success: true, result })
   } catch (e: any) {
