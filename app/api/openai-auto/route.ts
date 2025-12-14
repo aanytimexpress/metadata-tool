@@ -1,25 +1,26 @@
-// app/api/openai-auto/route.ts
-
 import { NextResponse } from "next/server";
-import { generateAutoAI } from "@/lib/autoAIClient";
+import { generateWithAutoAI } from "@/lib/autoAIClient";
 
 export async function POST(req: Request) {
   try {
-    const { prompt, apiKey } = await req.json();
+    const body = await req.json();
 
-    if (!prompt || !apiKey) {
-      return NextResponse.json(
-        { error: "Prompt or API key missing" },
-        { status: 400 }
-      );
-    }
+    const result = await generateWithAutoAI(body);
 
-    const result = await generateAutoAI(prompt, apiKey);
-
-    return NextResponse.json({ result });
-  } catch (err: any) {
+    return NextResponse.json({
+      success: true,
+      data: {
+        title: result.title?.replace(/[_\-]/g, " ").replace(/\.\w+$/, ""),
+        description: result.description,
+        keywords: result.keywords,
+      },
+    });
+  } catch (error: any) {
     return NextResponse.json(
-      { error: err.message || "AI generation failed" },
+      {
+        success: false,
+        error: error?.message || "Metadata generation failed",
+      },
       { status: 500 }
     );
   }
