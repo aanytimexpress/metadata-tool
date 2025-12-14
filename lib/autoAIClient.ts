@@ -1,20 +1,13 @@
 import { generateWithMistral } from "./mistralClient"
 
-export async function generateAutoAI({
-  apiKey,
-  prompt,
-  model,
-}: {
-  apiKey: string
+export async function generateAutoAI(
+  provider: "gemini" | "mistral",
+  apiKey: string,
   prompt: string
-  model: string
-}) {
-  return generateWithMistral({
-    apiKey,
-    prompt,
-    model,
-  })
-}
+) {
+  if (provider === "mistral") {
+    return generateWithMistral(apiKey, prompt)
+  }
 
-/* 👇 এই alias না থাকলে build ভাঙে */
-export { generateAutoAI as generateWithAutoAI }
+  throw new Error("Only Mistral enabled right now")
+}

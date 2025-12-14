@@ -1,12 +1,4 @@
-export async function generateWithMistral({
-  apiKey,
-  prompt,
-  model,
-}: {
-  apiKey: string
-  prompt: string
-  model: string
-}) {
+export async function generateWithMistral(apiKey: string, prompt: string) {
   const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -14,16 +6,11 @@ export async function generateWithMistral({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model,
+      model: "mistral-large-latest",
       messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
     }),
   })
 
-  if (!res.ok) {
-    throw new Error("Mistral API failed")
-  }
-
-  const data = await res.json()
-  return data.choices[0].message.content
+  const json = await res.json()
+  return json.choices?.[0]?.message?.content || ""
 }
